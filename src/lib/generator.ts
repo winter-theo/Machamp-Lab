@@ -66,6 +66,20 @@ export function toleranceSeconds(durationMinutes: number): number {
   return Math.max(0.1 * durationMinutes, 2) * 60;
 }
 
+/**
+ * Répartition prévue d'une séance, en minutes (avant les ajustements fins du générateur) :
+ * échauffement ~10 % (3 à 8 min), retour au calme ~10 % (2 à 6 min), réduits au minimum en
+ * séance express, et `extra` = bloc complémentaire au-delà de la durée raisonnable du type.
+ */
+export function plannedSplit(duration: number, maxMinutes = Number.POSITIVE_INFINITY) {
+  const express = duration <= EXPRESS_MAX;
+  const warmup = express ? 2 : clamp(Math.round(duration * 0.1), 3, 8);
+  const cooldown = express ? 1 : clamp(Math.round(duration * 0.1), 2, 6);
+  const main = Math.max(0, duration - warmup - cooldown);
+  const core = duration > maxMinutes ? Math.min(main, Math.max(0, maxMinutes - warmup - cooldown)) : main;
+  return { warmup, main: core, extra: main - core, cooldown };
+}
+
 export const SECTION_TITLES: Record<WorkoutSection['id'], string> = {
   warmup: 'Échauffement',
   main: 'Séance',
@@ -929,8 +943,9 @@ export function generateWorkout(input: GeneratorInput, options: GeneratorOptions
   // Échauffement ~10 % (3–8 min) et retour au calme ~10 % (2–6 min), réduits en séance express.
   const warmupRange: [number, number] = express ? [60, 180] : [180, 480];
   const cooldownRange: [number, number] = express ? [60, 120] : [120, 360];
-  const warmup0 = express ? 120 : clamp(Math.round(duration * 0.1) * 60, ...warmupRange);
-  const cooldown0 = express ? 60 : clamp(Math.round(duration * 0.1) * 60, ...cooldownRange);
+  const split = plannedSplit(duration);
+  const warmup0 = split.warmup * 60;
+  const cooldown0 = split.cooldown * 60;
   const mainBudget = target - warmup0 - cooldown0;
 
   // Au-delà de la durée raisonnable pour ce type, le reste devient un bloc de cardio modéré.

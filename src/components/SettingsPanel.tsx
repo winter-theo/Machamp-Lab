@@ -66,9 +66,11 @@ export function SettingsPanel({ settings, onChange, onGenerate, collapsed, onExp
           onChange={(equipment) => onChange({ equipment })}
           onCollapsedChange={(equipmentCollapsed) => onChange({ equipmentCollapsed })}
         />
-        <button type="button" className="btn btn-primary btn-generate" onClick={onGenerate}>
-          {hasSession ? 'Générer une nouvelle séance' : 'Générer mon entraînement'}
-        </button>
+        <div className="generate-dock">
+          <button type="button" className="btn btn-primary btn-generate" onClick={onGenerate}>
+            {hasSession ? 'Générer une nouvelle séance' : 'Générer mon entraînement'}
+          </button>
+        </div>
       </div>
     </section>
   );

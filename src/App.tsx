@@ -4,9 +4,10 @@ import { Mascot } from './components/Mascot';
 import { PixelSprite } from './components/Pixel';
 import { SettingsPanel } from './components/SettingsPanel';
 import { TipsDialog } from './components/TipsDialog';
+import { Welcome } from './components/Welcome';
 import { WorkoutView } from './components/WorkoutView';
 import { generateWorkout, replaceExercise } from './lib/generator';
-import { prefersReducedMotion } from './lib/hooks';
+import { prefersReducedMotion, useFitsViewport, useMediaQuery } from './lib/hooks';
 import {
   loadSession,
   loadSettings,
@@ -30,6 +31,9 @@ export default function App() {
   const sessionRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
   const pendingScroll = useRef<'session' | 'settings' | null>(null);
+  // Ordinateur : la colonne des réglages reste visible pendant le défilement si elle tient à l'écran.
+  const isDesktop = useMediaQuery('(min-width: 960px)');
+  const settingsFits = useFitsViewport(settingsRef, isDesktop);
 
   useEffect(() => saveSettings(settings), [settings]);
   useEffect(() => saveSession(session), [session]);
@@ -118,7 +122,7 @@ export default function App() {
       </header>
 
       <main className={`layout${session ? ' has-session' : ''}`}>
-        <div className="col-settings" ref={settingsRef}>
+        <div className={`col-settings${isDesktop && settingsFits ? ' is-sticky' : ''}`} ref={settingsRef}>
           <SettingsPanel
             settings={settings}
             onChange={updateSettings}
@@ -140,10 +144,13 @@ export default function App() {
               onReset={reset}
             />
           ) : (
-            <div className="empty-state">
-              <PixelSprite height={96} className="empty-sprite" />
-              <p>{MACHAMP_TEXT.emptyState}</p>
-            </div>
+            <>
+              <div className="empty-state">
+                <PixelSprite height={96} className="empty-sprite" />
+                <p>{MACHAMP_TEXT.emptyState}</p>
+              </div>
+              <Welcome settings={settings} />
+            </>
           )}
         </div>
       </main>
