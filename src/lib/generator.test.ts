@@ -3,7 +3,7 @@ import { EQUIPMENT } from '../data/equipment';
 import { EXERCISES } from '../data/exercises';
 import { FREQUENCY_RANGE, FREQUENCY_RULES } from '../data/tips';
 import { WORKOUT_TYPES } from '../data/workoutTypes';
-import { generateWorkout, getAlternatives, replaceExercise, toleranceSeconds } from './generator';
+import { generateWorkout, getAlternatives, plannedSplit, replaceExercise, toleranceSeconds } from './generator';
 import { createRng } from './random';
 import { allItems, itemsSeconds, workoutSeconds, type Workout } from './workout';
 
@@ -282,5 +282,14 @@ describe('replaceExercise', () => {
   it('renvoie null quand il n’y a aucune alternative', () => {
     const workout = generateWorkout({ typeId: 'full-body', duration: 45, equipment: [] }, { random: createRng(1) });
     expect(replaceExercise(workout, 'uid-inconnu')).toBeNull();
+  });
+});
+
+describe('plannedSplit', () => {
+  it('suit les règles d’échauffement et de retour au calme', () => {
+    expect(plannedSplit(10)).toEqual({ warmup: 2, main: 7, extra: 0, cooldown: 1 });
+    expect(plannedSplit(45)).toEqual({ warmup: 5, main: 35, extra: 0, cooldown: 5 });
+    expect(plannedSplit(120)).toEqual({ warmup: 8, main: 106, extra: 0, cooldown: 6 });
+    expect(plannedSplit(90, 40)).toEqual({ warmup: 8, main: 26, extra: 50, cooldown: 6 });
   });
 });
