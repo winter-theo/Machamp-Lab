@@ -1,0 +1,49 @@
+/*
+ * Thème de Machamp Lab — change les couleurs ici.
+ * Noir « pas trop sombre » + orange/marron du symbole Énergie Combat.
+ */
+:root {
+  color-scheme: dark;
+
+  /* Fonds */
+  --color-bg: #221f1d;
+  --color-surface: #2c2826;
+  --color-surface-2: #36312e;
+  --color-border: #4a423c;
+  /* Contour des cases à cocher et curseurs (contraste ≥ 3:1 avec les surfaces) */
+  --color-control: #8c8076;
+
+  /* Texte */
+  --color-text: #f5f0ea;
+  --color-text-muted: #b5a99e;
+
+  /* Accents */
+  --color-accent: #e07a2f; /* orange */
+  --color-accent-hover: #f29a52; /* orange clair */
+  --color-brown: #8b4a22; /* marron */
+  --color-brown-dark: #5a2e14; /* marron foncé : contours 8-bit */
+  /* Texte posé sur l'orange : foncé (le blanc n'est pas assez contrasté) */
+  --color-on-accent: #221f1d;
+
+  /* Bulles et boîte de dialogue façon jeu vidéo */
+  --color-cream: #f5f0ea;
+  --color-cream-text: #2a2420;
+
+  /* Focus clavier */
+  --color-focus: #f29a52;
+
+  /* Polices */
+  --font-ui: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-pixel: 'Press Start 2P', ui-monospace, monospace;
+  --font-pixel-text: 'Pixelify Sans', 'VT323', ui-monospace, monospace;
+
+  /* Formes */
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 20px;
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 10px 28px rgb(0 0 0 / 0.28);
+  --pixel: 3px;
+
+  /* Espace réservé en bas de page pour la mascotte */
+  --mascot-space: 128px;
+}
